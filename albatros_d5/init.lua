@@ -28,6 +28,7 @@ function albatros_d5.register_parts_method(self)
     local wheels=minetest.add_entity(pos,'albatros_d5:wheels')
     wheels:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
     self.wheels = wheels
+    airutils.add_paintable_part(self, self.wheels)
 
     local pilot_seat_base=minetest.add_entity(pos,'albatros_d5:seat_base')
     pilot_seat_base:set_attach(self.object,'',{x=0,y=-1.5,z=-8.89039},{x=0,y=0,z=0})
@@ -37,7 +38,7 @@ function albatros_d5.register_parts_method(self)
     stick:set_attach(self.object,'',self._stick_pos,{x=0,y=0,z=0})
     self.stick = stick
 
-    airutils.paint(self.wheels:get_luaentity(), self._color, self._painting_texture)
+    --airutils.paint(self.wheels:get_luaentity(), self._color)
 end
 
 albatros_d5.plane_properties = {
@@ -89,6 +90,7 @@ albatros_d5.plane_properties = {
     show_on_minimap = true,
     springiness = 0.1,
     physics = airutils.physics,
+    _max_plane_hp = 80,
     _longit_drag_factor = 0.13*0.13,
     _later_drag_factor = 2.0,
     _wing_angle_of_attack = 2.0,
@@ -128,11 +130,10 @@ albatros_d5.plane_properties = {
     _last_time_command = 1,
     _inv = nil,
     _inv_id = "",
-    _collision_sound = "ww1_planes_collision", --the col sound
+    _collision_sound = "airutils_collision", --the col sound
     _engine_sound = "albatros_d5_engine",
-    _painting_texture = "airutils_painting.png", --the texture to paint
-    _alternate_painting_texture = "albatros_d5_painting.png",
-    _mask_painting_texture = "albatros_d5_marks.png",
+    _painting_texture = {"airutils_painting.png","albatros_d5_painting.png",}, --the texture to paint
+    _mask_painting_associations = {["albatros_d5_painting.png"] = "albatros_d5_marks.png",["albatros_d5_lower.png"] = "albatros_d5_marks.png",},
     _register_parts_method = albatros_d5.register_parts_method, --the method to register plane parts
 
     get_staticdata = airutils.get_staticdata,
