@@ -38,7 +38,6 @@ initial_properties = {
 	visual = "mesh",
     backface_culling = false,
 	mesh = "albatros_d5_wheels.b3d",
-    --visual_size = {x = 3, y = 3, z = 3},
 	textures = {
         "airutils_metal.png",
         "airutils_painting.png", --montantes

@@ -41,12 +41,18 @@ function albatros_d5.register_parts_method(self)
     --airutils.paint(self.wheels:get_luaentity(), self._color)
 end
 
+function albatros_d5.destroy_parts_method(self)
+    if self.wheels then self.wheels:remove() end
+    if self.pilot_seat_base then self.pilot_seat_base:remove() end
+    if self.stick then self.stick:remove() end
+end
+
 albatros_d5.plane_properties = {
 	initial_properties = {
 	    physical = true,
         collide_with_objects = true,
-	    collisionbox = {-1.2, -1.60, -1.2, 1.2, 1, 1.2}, --{-1,0,-1, 1,0.3,1},
-	    selectionbox = {-2, -1.28, -2, 2, 0, 2},
+	    collisionbox = {-1.2, -1.60, -1.2, 1.2, 1.2, 1.2}, --{-1,0,-1, 1,0.3,1},
+	    selectionbox = {-1.2, -1.28, -1.2, 1.2, 1.2, 1.2},
 	    visual = "mesh",
         backface_culling = false,
 	    mesh = "albatros_d5_body.b3d",
@@ -140,6 +146,9 @@ albatros_d5.plane_properties = {
     _painting_texture = {"airutils_painting.png","albatros_d5_painting.png",}, --the texture to paint
     _mask_painting_associations = {["albatros_d5_painting.png"] = "albatros_d5_marks.png",["albatros_d5_lower.png"] = "albatros_d5_marks.png",},
     _register_parts_method = albatros_d5.register_parts_method, --the method to register plane parts
+    _destroy_parts_method = albatros_d5.destroy_parts_method,
+    _plane_y_offset_for_bullet = 1,
+    _custom_punch_when_attached = ww1_planes_lib._custom_punch_when_attached, --the method to execute click action inside the plane
 
     get_staticdata = airutils.get_staticdata,
     on_deactivate = airutils.on_deactivate,
