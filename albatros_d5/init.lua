@@ -59,28 +59,28 @@ albatros_d5.plane_properties = {
         stepheight = 0.5,
         textures = {
                     "airutils_black.png", --nacele
-                    "albatros_d5_painting.png", --asa superior
+                    "albatros_d5_painting_2.png", --asa superior
                     "albatros_d5_painting.png", --asa inferior
                     "albatros_d5_lower.png", --camuflagem inferior
                     "airutils_black.png", --cabos
                     "airutils_black.png", --assento
                     "airutils_metal.png", --bequilha
-                    "albatros_d5_painting.png", --ailerons - sup
-                    "albatros_d5_painting.png", --empenagem
+                    "albatros_d5_painting_2.png", --ailerons - sup
+                    "albatros_d5_painting_2.png", --empenagem
                     "albatros_d5_lower.png", --profundor inferior
-                    "albatros_d5_painting.png", --cone da cauda
+                    "albatros_d5_painting_2.png", --cone da cauda
                     "airutils_black.png", --escapamento
-                    "albatros_d5_painting.png", --estab horizontal
-                    "albatros_d5_painting.png", --estab vertical
+                    "albatros_d5_painting_2.png", --estab horizontal
+                    "albatros_d5_painting_2.png", --estab vertical
                     "albatros_d5_painting.png", --fuselagem
                     "albatros_d5_propeller.png", --helice
-                    "airutils_painting.png", --cubo helice
+                    "airutils_painting_2.png", --cubo helice
                     "airutils_brown.png", --nacele
                     "airutils_black.png", --armas
                     "airutils_painting.png", --montantes
                     "airutils_black2.png", --motor
                     "airutils_black.png", --cabecotes
-                    "albatros_d5_painting.png", --nariz
+                    "albatros_d5_painting_2.png", --nariz
                     },
     },
     textures = {},
@@ -123,7 +123,8 @@ albatros_d5.plane_properties = {
     _aileron_l_pos = {x=-32.2813,y=10.2,z=-6.01676},
     _gauge_fuel_position = {x=2.35,y=0.05,z=10.64},
     _passenger = nil,
-    _color = "#999999",
+    _color = "#c2914f",
+    _color_2 = "#919469",
     _rudder_angle = 0,
     _acceleration = 0,
     _engine_running = false,
@@ -146,7 +147,8 @@ albatros_d5.plane_properties = {
     _collision_sound = "airutils_collision", --the col sound
     _engine_sound = "albatros_d5_engine",
     _painting_texture = {"airutils_painting.png","albatros_d5_painting.png",}, --the texture to paint
-    _mask_painting_associations = {["albatros_d5_painting.png"] = "albatros_d5_marks.png",["albatros_d5_lower.png"] = "albatros_d5_marks.png",},
+    _painting_texture_2 = {"airutils_painting_2.png","albatros_d5_painting_2.png",}, --the texture to paint
+    _mask_painting_associations = {["albatros_d5_painting.png"] = "albatros_d5_marks.png",["albatros_d5_lower.png"] = "albatros_d5_marks.png",["albatros_d5_painting_2.png"] = "albatros_d5_marks.png",},
     _register_parts_method = albatros_d5.register_parts_method, --the method to register plane parts
     _destroy_parts_method = albatros_d5.destroy_parts_method,
     _plane_y_offset_for_bullet = 1,
