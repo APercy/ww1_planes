@@ -134,8 +134,8 @@ function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, des
 						end
 
 						--replace node
-						minetest.set_node(pos, {name = "air"})
-                        minetest.add_item(pos,node_name)
+						--minetest.set_node(pos, {name = "air"})
+                        --minetest.add_item(pos,node_name)
 
 						return
 					end
