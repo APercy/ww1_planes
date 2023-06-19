@@ -30,7 +30,7 @@ function ww1_planes_lib.spawn_bullet(self, player_name, ent_name, strength)
 end
 
 
-function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, description)
+function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, description, bullet_damage)
 	minetest.register_entity(ent_name, {
 		hp_max = 5,
 		physical = false,
@@ -42,6 +42,7 @@ function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, des
 		velocity = nil,
 		is_liquid = nil,
 		shooter_name = "",
+        damage = bullet_damage,
 		groups = {bullet = 1},
 
 		on_activate = function(self)
@@ -73,7 +74,7 @@ function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, des
 		                    groupcaps={
 			                    choppy={times={[1]=2.10, [2]=0.90, [3]=0.50}, uses=30, maxlevel=3},
 		                    },
-							damage_groups = {fleshy=8}
+							damage_groups = {fleshy=self.damage}
 						})
 						local thing_pos = thing.ref:get_pos()
 						if thing_pos then
@@ -88,9 +89,9 @@ function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, des
 						self.object:remove()
 
                         --do damage on my old planes
-                        if ent then
-                            if ent.hp_max then ent.hp_max = ent.hp_max - 8 end
-                        end
+                        --[[if ent then
+                            if ent.hp_max then ent.hp_max = ent.hp_max - self.damage end
+                        end]]--
 
 						if minetest.is_protected(pos, self.shooter_name) then
 							return

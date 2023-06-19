@@ -14,7 +14,7 @@ function ww1_planes_lib._custom_punch_when_attached(self, player)
     ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 150)
 end
 
-ww1_planes_lib.register_bullet("ww1_planes_lib:bullet1", "ww1_planes_bullet_ico.png", "ww1_planes_box_texture.png", "Plane bullet")
+ww1_planes_lib.register_bullet("ww1_planes_lib:bullet1", "ww1_planes_bullet_ico.png", "ww1_planes_box_texture.png", "Plane bullet", 8)
 
 minetest.register_privilege("WW1_fighter_licence", {
     description = "Gives a fighter licence to the player",
