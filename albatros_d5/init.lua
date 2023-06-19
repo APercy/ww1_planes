@@ -153,6 +153,9 @@ albatros_d5.plane_properties = {
     _destroy_parts_method = albatros_d5.destroy_parts_method,
     _plane_y_offset_for_bullet = 1,
     _custom_punch_when_attached = ww1_planes_lib._custom_punch_when_attached, --the method to execute click action inside the plane
+    _custom_pilot_formspec = ww1_planes_lib.pilot_formspec,
+
+    _ww1_loaded_bullets = 300, --start loaded
 
     get_staticdata = airutils.get_staticdata,
     on_deactivate = airutils.on_deactivate,

@@ -30,7 +30,8 @@ function ww1_planes_lib.spawn_bullet(self, player_name, ent_name, strength)
 end
 
 
-function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, description, bullet_damage)
+function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, description, bullet_damage, bullets_max_stack)
+    bullets_max_stack = bullets_max_stack or 99
 	minetest.register_entity(ent_name, {
 		hp_max = 5,
 		physical = false,
@@ -150,6 +151,6 @@ function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, des
 	minetest.register_craftitem(ent_name, {
 		description = description,
 		inventory_image = inv_image,
-		stack_max = 1000,
+		stack_max = bullets_max_stack,
 	})
 end

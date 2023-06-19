@@ -3,6 +3,7 @@ local S = minetest.get_translator(minetest.get_current_modname())
 ww1_planes_lib = {}
 
 dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "bullets.lua")
+dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "forms.lua") --custom form for the planes
 
 --
 -- helpers and co.
@@ -10,11 +11,17 @@ dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "bullets.lua")
 
 --returns 0 for old, 1 for new
 function ww1_planes_lib._custom_punch_when_attached(self, player)
-    local player_proterties = player:get_properties()
-    ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 150)
+    if self._ww1_loaded_bullets then
+        if self._ww1_loaded_bullets > 0 then
+            local total_bullets = self._ww1_loaded_bullets
+            local player_proterties = player:get_properties()
+            ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 150)
+            self._ww1_loaded_bullets = total_bullets - 1
+        end
+    end
 end
 
-ww1_planes_lib.register_bullet("ww1_planes_lib:bullet1", "ww1_planes_bullet_ico.png", "ww1_planes_box_texture.png", "Plane bullet", 8)
+ww1_planes_lib.register_bullet("ww1_planes_lib:bullet1", "ww1_planes_bullet_ico.png", "ww1_planes_box_texture.png", "Plane bullet", 8, 300)
 
 minetest.register_privilege("WW1_fighter_licence", {
     description = "Gives a fighter licence to the player",
