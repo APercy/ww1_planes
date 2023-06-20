@@ -59,14 +59,17 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                 airutils.dettachPlayer(ent, player)
 		    end
             if fields.guns then
-                local bullets_to_take = 300 - ent._ww1_loaded_bullets
-                if bullets_to_take then
-                    local stack = ItemStack("ww1_planes_lib:bullet1 " .. bullets_to_take)
-                    local inv = airutils.get_inventory(ent)
-                    if inv then
-                        local taken = inv:remove_item("main", stack)
-                        ent._ww1_loaded_bullets = ent._ww1_loaded_bullets + taken:get_count()
-                        airutils.save_inventory(ent)
+                if ent._vehicle_custom_data then
+                    if not ent._vehicle_custom_data._ww1_loaded_bullets then ent._vehicle_custom_data._ww1_loaded_bullets = 0 end
+                    local bullets_to_take = 300 - ent._vehicle_custom_data._ww1_loaded_bullets
+                    if bullets_to_take then
+                        local stack = ItemStack("ww1_planes_lib:bullet1 " .. bullets_to_take)
+                        local inv = airutils.get_inventory(ent)
+                        if inv then
+                            local taken = inv:remove_item("main", stack)
+                            ent._vehicle_custom_data._ww1_loaded_bullets = ent._vehicle_custom_data._ww1_loaded_bullets + taken:get_count()
+                            airutils.save_inventory(ent)
+                        end
                     end
                 end
             end

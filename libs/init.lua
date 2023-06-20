@@ -11,12 +11,12 @@ dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "forms.lua") --cus
 
 --returns 0 for old, 1 for new
 function ww1_planes_lib._custom_punch_when_attached(self, player)
-    if self._ww1_loaded_bullets then
-        if self._ww1_loaded_bullets > 0 then
-            local total_bullets = self._ww1_loaded_bullets
+    if self._vehicle_custom_data._ww1_loaded_bullets then
+        if self._vehicle_custom_data._ww1_loaded_bullets > 0 then
+            local total_bullets = self._vehicle_custom_data._ww1_loaded_bullets
             local player_proterties = player:get_properties()
             ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 150)
-            self._ww1_loaded_bullets = total_bullets - 1
+            self._vehicle_custom_data._ww1_loaded_bullets = total_bullets - 1
         end
     end
 end
