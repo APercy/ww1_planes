@@ -54,14 +54,15 @@ function albatros_d5.destroy_parts_method(self)
 end
 
 function albatros_d5.step_additional_function(self)
-    local pos = self.object:get_pos()
+    --do not active the bellow code, it is generating memory garbage
+    --[[local pos = self.object:get_pos()
     local altimeter = airutils.plot_altimeter_gauge(self, 500, pos.y, 40, 220)
     local speed = airutils.plot_speed_gauge(self, 500, self._indicated_speed, self._max_speed, 150, 220)
     local fuel = airutils.plot_fuel_gauge(self, 500, self._energy, self._max_fuel, 380, 260)
     local panel = "airutils_brown.png"..altimeter..speed..fuel
     local ent = self.object:get_luaentity()
     ent.initial_properties.textures[19] = panel
-    --self.object:set_properties({textures=self.initial_properties.textures})
+    self.object:set_properties({textures=self.initial_properties.textures})]]--
 end
 
 albatros_d5.plane_properties = {
