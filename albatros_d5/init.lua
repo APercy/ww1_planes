@@ -38,6 +38,12 @@ function albatros_d5.register_parts_method(self)
     stick:set_attach(self.object,'',self._stick_pos,{x=0,y=0,z=0})
     self.stick = stick
 
+    local altimeter = airutils.plot_altimeter_gauge(self, 500, pos.y, 40, 220)
+    local speed = airutils.plot_speed_gauge(self, 500, 0, self._max_speed, 150, 220)
+    local fuel = airutils.plot_fuel_gauge(self, 500, self._energy, self._max_fuel, 380, 260)
+    --self.initial_properties.textures[19] = "(airutils_brown.png"..altimeter..")"..speed..fuel
+
+    --minetest.chat_send_all(self.initial_properties.textures[19])
     --airutils.paint(self.wheels:get_luaentity(), self._color)
 end
 
@@ -45,6 +51,17 @@ function albatros_d5.destroy_parts_method(self)
     if self.wheels then self.wheels:remove() end
     if self.pilot_seat_base then self.pilot_seat_base:remove() end
     if self.stick then self.stick:remove() end
+end
+
+function albatros_d5.step_additional_function(self)
+    local pos = self.object:get_pos()
+    local altimeter = airutils.plot_altimeter_gauge(self, 500, pos.y, 40, 220)
+    local speed = airutils.plot_speed_gauge(self, 500, self._indicated_speed, self._max_speed, 150, 220)
+    local fuel = airutils.plot_fuel_gauge(self, 500, self._energy, self._max_fuel, 380, 260)
+    local panel = "airutils_brown.png"..altimeter..speed..fuel
+    local ent = self.object:get_luaentity()
+    ent.initial_properties.textures[19] = panel
+    --self.object:set_properties({textures=self.initial_properties.textures})
 end
 
 albatros_d5.plane_properties = {
@@ -76,6 +93,7 @@ albatros_d5.plane_properties = {
                     "albatros_d5_propeller.png", --helice
                     "airutils_painting_2.png", --cubo helice
                     "airutils_brown.png", --nacele
+                    "airutils_painting.png", --painel
                     "airutils_black.png", --armas
                     "airutils_painting.png", --montantes
                     "airutils_black2.png", --motor
@@ -102,6 +120,7 @@ albatros_d5.plane_properties = {
     _wing_angle_of_attack = 2.0,
     _min_speed = 4,
     _max_speed = 10,
+    _max_fuel = 10,
     _speed_not_exceed = 16,
     _min_attack_angle = 0.8,
     _max_attack_angle = 90,
@@ -121,7 +140,6 @@ albatros_d5.plane_properties = {
     _rudder_pos = {x=0,y=6.76323,z=-38.4982},
     _aileron_r_pos = {x=32.2813,y=10.2,z=-6.01676},
     _aileron_l_pos = {x=-32.2813,y=10.2,z=-6.01676},
-    _gauge_fuel_position = {x=2.35,y=0.05,z=10.64},
     _passenger = nil,
     _color = "#c2914f",
     _color_2 = "#919469",
@@ -154,6 +172,7 @@ albatros_d5.plane_properties = {
     _plane_y_offset_for_bullet = 1,
     _custom_punch_when_attached = ww1_planes_lib._custom_punch_when_attached, --the method to execute click action inside the plane
     _custom_pilot_formspec = ww1_planes_lib.pilot_formspec,
+    _custom_step_additional_function = albatros_d5.step_additional_function,
 
     get_staticdata = airutils.get_staticdata,
     on_deactivate = airutils.on_deactivate,
