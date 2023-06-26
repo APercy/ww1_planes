@@ -94,7 +94,7 @@ albatros_d5.plane_properties = {
                     "albatros_d5_propeller.png", --helice
                     "airutils_painting_2.png", --cubo helice
                     "airutils_brown.png", --nacele
-                    "airutils_painting.png", --painel
+                    "airutils_brown.png", --painel
                     "airutils_black.png", --armas
                     "airutils_painting.png", --montantes
                     "airutils_black2.png", --motor
