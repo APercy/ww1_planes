@@ -115,6 +115,7 @@ albatros_d5.plane_properties = {
     show_on_minimap = true,
     springiness = 0.1,
     physics = airutils.physics,
+    _max_occupants = 1,
     _max_plane_hp = 80,
     _longit_drag_factor = 0.13*0.13,
     _later_drag_factor = 2.0,
