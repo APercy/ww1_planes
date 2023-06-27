@@ -7,12 +7,25 @@ dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "lib_planes" .. DIR_DELI
 function ww1_planes_lib.pilot_formspec(name)
     local basic_form = table.concat({
         "formspec_version[3]",
-        "size[6,6]",
+        "size[6.0,8.0]",
 	}, "")
 
-	basic_form = basic_form.."button[1,1.0;4,1;go_out;Go Offboard]"
-	basic_form = basic_form.."button[1,2.5;4,1;hud;Show/Hide Gauges]"
-    basic_form = basic_form.."button[1,4.0;4,1;guns;Reload Guns]"
+    local player = minetest.get_player_by_name(name)
+    local plane_obj = airutils.getPlaneFromPlayer(player)
+    if plane_obj == nil then
+        return
+    end
+    local ent = plane_obj:get_luaentity()
+
+    local yaw = "false"
+    if ent._yaw_by_mouse then yaw = "true" end
+
+	basic_form = basic_form.."button[1,1.0;4,1;turn_on;Start/Stop Engines]"
+	basic_form = basic_form.."button[1,2.1;4,1;go_out;Go Offboard]"
+	basic_form = basic_form.."button[1,3.2;4,1;hud;Show/Hide Gauges]"
+	basic_form = basic_form.."button[1,4.3;4,1;inventory;Show Inventory]"
+    basic_form = basic_form.."button[1,5.4;4,1;guns;Reload Guns]"
+    basic_form = basic_form.."checkbox[1,6.8;yaw;Control by mouse;"..yaw.."]"
 
     minetest.show_formspec(name, "ww1_planes_lib:pilot_main", basic_form)
 end
@@ -23,6 +36,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
         local plane_obj = airutils.getPlaneFromPlayer(player)
         if plane_obj then
             local ent = plane_obj:get_luaentity()
+		    if fields.turn_on then
+                airutils.start_engine(ent)
+		    end
             if fields.hud then
                 if ent._show_hud == true then
                     ent._show_hud = false
@@ -69,8 +85,32 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                             local taken = inv:remove_item("main", stack)
                             ent._vehicle_custom_data._ww1_loaded_bullets = ent._vehicle_custom_data._ww1_loaded_bullets + taken:get_count()
                             airutils.save_inventory(ent)
+                            if taken:get_count() > 0 then
+                                minetest.chat_send_player(name, core.colorize('#00ff00', " >>> Guns reloaded."))
+                                minetest.sound_play("ww1_planes_gun_reload", {
+                                    object = ent.object,
+                                    max_hear_distance = 15,
+                                    gain = 1.0,
+                                    fade = 0.0,
+                                    pitch = 1.0,
+                                }, true)
+                            else
+                                minetest.chat_send_player(name, core.colorize('#ff0000', " >>> There is no bullet on plane's inventory to reload."))
+                            end
                         end
                     end
+                end
+            end
+            if fields.inventory then
+                if ent._trunk_slots then
+                    airutils.show_vehicle_trunk_formspec(ent, player, ent._trunk_slots)
+                end
+            end
+            if fields.yaw then
+                if ent._yaw_by_mouse == true then
+                    ent._yaw_by_mouse = false
+                else
+                    ent._yaw_by_mouse = true
                 end
             end
         end

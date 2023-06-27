@@ -123,7 +123,8 @@ albatros_d5.plane_properties = {
     _min_speed = 4,
     _max_speed = 10,
     _max_fuel = 10,
-    _speed_not_exceed = 16,
+    _speed_not_exceed = 20,
+    _damage_by_wind_speed = 2,
     _min_attack_angle = 0.8,
     _max_attack_angle = 90,
     _elevator_auto_estabilize = 100,
@@ -174,6 +175,7 @@ albatros_d5.plane_properties = {
     _plane_y_offset_for_bullet = 1,
     _custom_punch_when_attached = ww1_planes_lib._custom_punch_when_attached, --the method to execute click action inside the plane
     _custom_pilot_formspec = ww1_planes_lib.pilot_formspec,
+    --_custom_pilot_formspec = airutils.pilot_formspec,
     _custom_step_additional_function = albatros_d5.step_additional_function,
 
     get_staticdata = airutils.get_staticdata,
