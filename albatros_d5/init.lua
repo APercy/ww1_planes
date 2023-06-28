@@ -57,8 +57,8 @@ function albatros_d5.step_additional_function(self)
     minutes = (minutes * 100) / 100
     local minute_angle = (minutes*-360)/100
     local hour_angle = (hour*-360)/10 + ((minute_angle*36)/360)
-    self.cabin:set_bone_position("altimeter_pt_1", {x=-3.075,y=4.32,z=-4.05}, {x=0,y=0,z=minute_angle})
-    self.cabin:set_bone_position("altimeter_pt_2", {x=-3.075,y=4.32,z=-4.05}, {x=0,y=0,z=hour_angle})
+    self.cabin:set_bone_position("altimeter_pt_1", {x=-3.075,y=4.32,z=-4.05}, {x=0,y=0,z=hour_angle})
+    self.cabin:set_bone_position("altimeter_pt_2", {x=-3.075,y=4.32,z=-4.05}, {x=0,y=0,z=minute_angle})
 
     local power_indicator_angle = airutils.get_gauge_angle(self._power_lever/6.5)
     self.cabin:set_bone_position("power", {x=1.16,y=4.32,z=-4.05}, {x=0,y=0,z=power_indicator_angle-90})
