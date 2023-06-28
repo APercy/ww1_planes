@@ -81,31 +81,6 @@ initial_properties = {
 	
 })
 
---
--- fuel
---
-minetest.register_entity('albatros_d5:pointer',{
-initial_properties = {
-	physical = false,
-	collide_with_objects=false,
-	pointable=false,
-	visual = "mesh",
-	mesh = "albatros_d5_pointer.b3d",
-    visual_size = {x = 0.4, y = 0.4, z = 0.4},
-	textures = {"albatros_d5_grey.png"},
-	},
-	
-    on_activate = function(self,std)
-	    self.sdata = minetest.deserialize(std) or {}
-	    if self.sdata.remove then self.object:remove() end
-    end,
-	    
-    get_staticdata=function(self)
-      self.sdata.remove=true
-      return minetest.serialize(self.sdata)
-    end,
-})
-
 minetest.register_entity("albatros_d5:albatros_d5", 
     airutils.properties_copy(albatros_d5.plane_properties)
 )

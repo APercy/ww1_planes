@@ -34,14 +34,14 @@ function albatros_d5.register_parts_method(self)
     pilot_seat_base:set_attach(self.object,'',{x=0,y=-1.5,z=-8.89039},{x=0,y=0,z=0})
     self.pilot_seat_base = pilot_seat_base
 
-    local stick=minetest.add_entity(pos,'albatros_d5:stick')
-    stick:set_attach(self.object,'',self._stick_pos,{x=0,y=0,z=0})
-    self.stick = stick
+    local cabin=minetest.add_entity(pos,'ww1_planes_lib:cabin')
+    cabin:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
+    self.cabin = cabin
 
-    local altimeter = airutils.plot_altimeter_gauge(self, 500, pos.y, 40, 220)
-    local speed = airutils.plot_speed_gauge(self, 500, 0, self._max_speed, 150, 220)
-    local fuel = airutils.plot_fuel_gauge(self, 500, self._energy, self._max_fuel, 380, 260)
-    --self.initial_properties.textures[19] = "(airutils_brown.png"..altimeter..")"..speed..fuel
+    local altimeter = airutils.plot_altimeter_gauge(self, 500, 40, 220)
+    local speed = airutils.plot_speed_gauge(self, 500, 150, 220)
+    local fuel = airutils.plot_fuel_gauge(self, 500, 380, 260)
+    self.initial_properties.textures[19] = "airutils_brown.png"..altimeter..speed..fuel
 
     --minetest.chat_send_all(self.initial_properties.textures[19])
     --airutils.paint(self.wheels:get_luaentity(), self._color)
@@ -50,10 +50,27 @@ end
 function albatros_d5.destroy_parts_method(self)
     if self.wheels then self.wheels:remove() end
     if self.pilot_seat_base then self.pilot_seat_base:remove() end
-    if self.stick then self.stick:remove() end
+    if self.cabin then self.cabin:remove() end
 end
 
 function albatros_d5.step_additional_function(self)
+
+    --set stick position
+    self.cabin:set_bone_position("stick", {x=0,y=-3.65,z=-4}, {x=self._elevator_angle/2,y=0,z=self._rudder_angle})
+
+    local speed_angle = airutils.get_gauge_angle(self._indicated_speed, -45)
+    self.cabin:set_bone_position("speed", {x=-0.96,y=4.33,z=-4.05}, {x=0,y=0,z=speed_angle})
+
+    local fuel_percentage = (self._energy*100)/self._max_fuel
+    local fuel_angle = -(fuel_percentage*180)/100
+    self.cabin:set_bone_position("fuel", {x=3.44,y=3.6,z=-4.05}, {x=0,y=0,z=fuel_angle})
+
+    self.cabin:set_bone_position("climber", {x=0,y=4,z=-3}, {x=0,y=0,z=0})
+    self.cabin:set_bone_position("power", {x=0,y=4,z=-3}, {x=0,y=0,z=0})
+    self.cabin:set_bone_position("altimeter_pt_1", {x=0,y=4,z=-3}, {x=0,y=0,z=0})
+    self.cabin:set_bone_position("altimeter_pt_2", {x=0,y=4,z=-3}, {x=0,y=0,z=0})
+
+
     --do not active the bellow code, it is generating memory garbage
     --[[local pos = self.object:get_pos()
     local altimeter = airutils.plot_altimeter_gauge(self, 500, pos.y, 40, 220)
@@ -138,7 +155,6 @@ albatros_d5.plane_properties = {
     _elevator_limit = 30.0,
     _pitch_intensity = 0.4,
     _yaw_intensity = 20,
-    _stick_pos = {x=0,y=-6,z=-3},
     _elevator_pos = {x=0, y=0.15842, z=-44.153},
     _rudder_pos = {x=0,y=6.76323,z=-38.4982},
     _aileron_r_pos = {x=32.2813,y=10.2,z=-6.01676},

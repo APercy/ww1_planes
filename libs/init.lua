@@ -9,6 +9,29 @@ dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "forms.lua") --cus
 -- helpers and co.
 --
 
+minetest.register_entity('ww1_planes_lib:cabin',{
+initial_properties = {
+	physical = false,
+	collide_with_objects=false,
+	pointable=false,
+	visual = "mesh",
+	mesh = "ww1_planes_lib_cabin.b3d",
+	textures = {"airutils_white.png", "airutils_metal.png", "airutils_black.png", "airutils_red.png", },
+	},
+	
+    on_activate = function(self,std)
+	    self.sdata = minetest.deserialize(std) or {}
+	    if self.sdata.remove then self.object:remove() end
+    end,
+	    
+    get_staticdata=function(self)
+      self.sdata.remove=true
+      return minetest.serialize(self.sdata)
+    end,
+	
+})
+
+
 --returns 0 for old, 1 for new
 function ww1_planes_lib._custom_punch_when_attached(self, player)
     if self._vehicle_custom_data._ww1_loaded_bullets then
