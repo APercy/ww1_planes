@@ -5,26 +5,6 @@ albatros_d5={}
 function albatros_d5.register_parts_method(self)
     local pos = self.object:get_pos()
 
-    --[[local fuel_gauge=minetest.add_entity(pos,'albatros_d5:pointer')
-    local energy_indicator_angle = albatros_d5.get_gauge_angle(self._energy)
-    fuel_gauge:set_attach(self.object,'',albatros_d5_GAUGE_FUEL_POSITION,{x=0,y=0,z=energy_indicator_angle})
-    self.fuel_gauge = fuel_gauge
-
-    local power_gauge=minetest.add_entity(pos,'albatros_d5:pointer')
-    local power_indicator_angle = albatros_d5.get_gauge_angle(self._power_lever)
-    power_gauge:set_attach(self.object,'',albatros_d5_GAUGE_POWER_POSITION,{x=0,y=0,z=power_indicator_angle})
-    self.power_gauge = power_gauge
-
-    local climb_gauge=minetest.add_entity(pos,'albatros_d5:pointer')
-    local climb_angle = albatros_d5.get_gauge_angle(0)
-    climb_gauge:set_attach(self.object,'',albatros_d5_GAUGE_CLIMBER_POSITION,{x=0,y=0,z=climb_angle})
-    self.climb_gauge = climb_gauge
-
-    local speed_gauge=minetest.add_entity(pos,'albatros_d5:pointer')
-    local speed_angle = albatros_d5.get_gauge_angle(100)
-    speed_gauge:set_attach(self.object,'',albatros_d5_GAUGE_SPEED_POSITION,{x=0,y=0,z=speed_angle})
-    self.speed_gauge = speed_gauge]]--
-
     local wheels=minetest.add_entity(pos,'albatros_d5:wheels')
     wheels:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
     self.wheels = wheels
@@ -40,8 +20,9 @@ function albatros_d5.register_parts_method(self)
 
     local altimeter = airutils.plot_altimeter_gauge(self, 500, 40, 220)
     local speed = airutils.plot_speed_gauge(self, 500, 150, 220)
+    local rpm = airutils.plot_power_gauge(self, 500, 260, 220)
     local fuel = airutils.plot_fuel_gauge(self, 500, 380, 260)
-    self.initial_properties.textures[19] = "airutils_brown.png"..altimeter..speed..fuel
+    self.initial_properties.textures[19] = "airutils_brown.png"..altimeter..speed..rpm..fuel
 
     --minetest.chat_send_all(self.initial_properties.textures[19])
     --airutils.paint(self.wheels:get_luaentity(), self._color)
@@ -58,28 +39,31 @@ function albatros_d5.step_additional_function(self)
     --set stick position
     self.cabin:set_bone_position("stick", {x=0,y=-3.65,z=-4}, {x=self._elevator_angle/2,y=0,z=self._rudder_angle})
 
+    --speed
     local speed_angle = airutils.get_gauge_angle(self._indicated_speed, -45)
-    self.cabin:set_bone_position("speed", {x=-0.96,y=4.33,z=-4.05}, {x=0,y=0,z=speed_angle})
+    self.cabin:set_bone_position("speed", {x=-0.97,y=4.32,z=-4.05}, {x=0,y=0,z=speed_angle})
 
+    --fuel
     local fuel_percentage = (self._energy*100)/self._max_fuel
     local fuel_angle = -(fuel_percentage*180)/100
     self.cabin:set_bone_position("fuel", {x=3.44,y=3.6,z=-4.05}, {x=0,y=0,z=fuel_angle})
 
-    self.cabin:set_bone_position("climber", {x=0,y=4,z=-3}, {x=0,y=0,z=0})
-    self.cabin:set_bone_position("power", {x=0,y=4,z=-3}, {x=0,y=0,z=0})
-    self.cabin:set_bone_position("altimeter_pt_1", {x=0,y=4,z=-3}, {x=0,y=0,z=0})
-    self.cabin:set_bone_position("altimeter_pt_2", {x=0,y=4,z=-3}, {x=0,y=0,z=0})
+    --altimeter
+    local pos = self.object:get_pos()
+    local altitude = (pos.y / 0.32) / 100
+    local hour, minutes = math.modf( altitude )
+    hour = math.fmod (hour, 10)
+    minutes = minutes * 100
+    minutes = (minutes * 100) / 100
+    local minute_angle = (minutes*-360)/100
+    local hour_angle = (hour*-360)/10 + ((minute_angle*36)/360)
+    self.cabin:set_bone_position("altimeter_pt_1", {x=-3.075,y=4.32,z=-4.05}, {x=0,y=0,z=minute_angle})
+    self.cabin:set_bone_position("altimeter_pt_2", {x=-3.075,y=4.32,z=-4.05}, {x=0,y=0,z=hour_angle})
 
+    local power_indicator_angle = airutils.get_gauge_angle(self._power_lever/6.5)
+    self.cabin:set_bone_position("power", {x=1.16,y=4.32,z=-4.05}, {x=0,y=0,z=power_indicator_angle-90})
 
-    --do not active the bellow code, it is generating memory garbage
-    --[[local pos = self.object:get_pos()
-    local altimeter = airutils.plot_altimeter_gauge(self, 500, pos.y, 40, 220)
-    local speed = airutils.plot_speed_gauge(self, 500, self._indicated_speed, self._max_speed, 150, 220)
-    local fuel = airutils.plot_fuel_gauge(self, 500, self._energy, self._max_fuel, 380, 260)
-    local panel = "airutils_brown.png"..altimeter..speed..fuel
-    local ent = self.object:get_luaentity()
-    ent.initial_properties.textures[19] = panel
-    self.object:set_properties({textures=self.initial_properties.textures})]]--
+    self.cabin:set_bone_position("climber", {x=0,y=4.32,z=-3}, {x=0,y=0,z=0})
 end
 
 albatros_d5.plane_properties = {
@@ -134,6 +118,7 @@ albatros_d5.plane_properties = {
     physics = airutils.physics,
     _max_occupants = 1,
     _max_plane_hp = 80,
+    _enable_explosion = true,
     _longit_drag_factor = 0.13*0.13,
     _later_drag_factor = 2.0,
     _wing_angle_of_attack = 2.0,
