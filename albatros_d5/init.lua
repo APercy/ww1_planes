@@ -127,6 +127,7 @@ albatros_d5.plane_properties = {
     _max_fuel = 10,
     _speed_not_exceed = 20,
     _damage_by_wind_speed = 2,
+    _hard_damage = true,
     _min_attack_angle = 0.8,
     _max_attack_angle = 90,
     _elevator_auto_estabilize = 100,
