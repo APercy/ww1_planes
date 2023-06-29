@@ -10,7 +10,7 @@ function albatros_d5.register_parts_method(self)
     self.wheels = wheels
     airutils.add_paintable_part(self, self.wheels)
 
-    local pilot_seat_base=minetest.add_entity(pos,'albatros_d5:seat_base')
+    local pilot_seat_base=minetest.add_entity(pos,'airutils:seat_base')
     pilot_seat_base:set_attach(self.object,'',{x=0,y=-1.5,z=-8.89039},{x=0,y=0,z=0})
     self.pilot_seat_base = pilot_seat_base
 
@@ -122,6 +122,7 @@ albatros_d5.plane_properties = {
     _longit_drag_factor = 0.13*0.13,
     _later_drag_factor = 2.0,
     _wing_angle_of_attack = 2.0,
+    _wing_span = 10, --milimeters
     _min_speed = 4,
     _max_speed = 10,
     _max_fuel = 10,
