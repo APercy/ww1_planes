@@ -111,6 +111,7 @@ albatros_d5.plane_properties = {
     show_on_minimap = true,
     springiness = 0.1,
     physics = airutils.physics,
+    _use_camera_relocation = true,
     _seats = {{x=0,y=-1.5,z=-8.89039},},
     _seats_rot = {0},  --necessary when using reversed seats
     _have_copilot = false, --wil use the second position of the _seats list
