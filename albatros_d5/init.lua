@@ -10,10 +10,6 @@ function albatros_d5.register_parts_method(self)
     self.wheels = wheels
     airutils.add_paintable_part(self, self.wheels)
 
-    local pilot_seat_base=minetest.add_entity(pos,'airutils:seat_base')
-    pilot_seat_base:set_attach(self.object,'',{x=0,y=-1.5,z=-8.89039},{x=0,y=0,z=0})
-    self.pilot_seat_base = pilot_seat_base
-
     local cabin=minetest.add_entity(pos,'ww1_planes_lib:cabin')
     cabin:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
     self.cabin = cabin
@@ -30,7 +26,6 @@ end
 
 function albatros_d5.destroy_parts_method(self)
     if self.wheels then self.wheels:remove() end
-    if self.pilot_seat_base then self.pilot_seat_base:remove() end
     if self.cabin then self.cabin:remove() end
 end
 
@@ -116,9 +111,12 @@ albatros_d5.plane_properties = {
     show_on_minimap = true,
     springiness = 0.1,
     physics = airutils.physics,
+    _seats = {{x=0,y=-1.5,z=-8.89039},},
+    _seats_rot = {0},  --necessary when using reversed seats
+    _have_copilot = false, --wil use the second position of the _seats list
     _max_occupants = 1,
     _max_plane_hp = 80,
-    _enable_explosion = true,
+    _enable_fire_explosion = true,
     _longit_drag_factor = 0.13*0.13,
     _later_drag_factor = 2.0,
     _wing_angle_of_attack = 2.0,
@@ -135,18 +133,19 @@ albatros_d5.plane_properties = {
     _tail_lift_min_speed = 2,
     _tail_lift_max_speed = 8,
     _max_engine_acc = 8.5,
-    _tail_angle = 14,
+    _tail_angle = 14, --degrees
     _lift = 16,
     _trunk_slots = 2, --the trunk slots
     _rudder_limit = 40.0,
     _elevator_limit = 30.0,
+    _elevator_response_attenuation = 10,
     _pitch_intensity = 0.4,
     _yaw_intensity = 20,
+    _yaw_turn_rate = 14,
     _elevator_pos = {x=0, y=0.15842, z=-44.153},
     _rudder_pos = {x=0,y=6.76323,z=-38.4982},
     _aileron_r_pos = {x=32.2813,y=10.2,z=-6.01676},
     _aileron_l_pos = {x=-32.2813,y=10.2,z=-6.01676},
-    _passenger = nil,
     _color = "#c2914f",
     _color_2 = "#919469",
     _rudder_angle = 0,
