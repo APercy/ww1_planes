@@ -110,6 +110,7 @@ albatros_d5.plane_properties = {
     shaded = true,
     show_on_minimap = true,
     springiness = 0.1,
+    buoyancy = 1.02,
     physics = airutils.physics,
     _use_camera_relocation = true,
     _seats = {{x=0,y=-1.5,z=-8.89039},},
