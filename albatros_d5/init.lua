@@ -20,8 +20,14 @@ function albatros_d5.register_parts_method(self)
     local fuel = airutils.plot_fuel_gauge(self, 500, 380, 260)
     self.initial_properties.textures[19] = "airutils_brown.png"..altimeter..speed..rpm..fuel
 
-    --minetest.chat_send_all(self.initial_properties.textures[19])
-    --airutils.paint(self.wheels:get_luaentity(), self._color)
+    --set stick position
+    self.cabin:set_bone_position("stick", {x=0,y=-3.65,z=-4}, {x=0,y=0,z=0})
+    self.cabin:set_bone_position("speed", {x=-0.97,y=4.32,z=-4.05}, {x=0,y=0,z=0})
+    self.cabin:set_bone_position("fuel", {x=3.44,y=3.6,z=-4.05}, {x=0,y=0,z=0})
+    self.cabin:set_bone_position("altimeter_pt_1", {x=-3.075,y=4.32,z=-4.05}, {x=0,y=0,z=0})
+    self.cabin:set_bone_position("altimeter_pt_2", {x=-3.075,y=4.32,z=-4.05}, {x=0,y=0,z=0})
+    self.cabin:set_bone_position("power", {x=1.16,y=4.32,z=-4.05}, {x=0,y=0,z=0})
+    self.cabin:set_bone_position("climber", {x=0,y=4.32,z=-3}, {x=0,y=0,z=0})
 end
 
 function albatros_d5.destroy_parts_method(self)
@@ -30,6 +36,10 @@ function albatros_d5.destroy_parts_method(self)
 end
 
 function albatros_d5.step_additional_function(self)
+
+    if (self.driver_name==nil) and (self.co_pilot==nil) then --pilot or copilot
+        return
+    end
 
     --set stick position
     self.cabin:set_bone_position("stick", {x=0,y=-3.65,z=-4}, {x=self._elevator_angle/2,y=0,z=self._rudder_angle})
@@ -129,7 +139,7 @@ albatros_d5.plane_properties = {
     _speed_not_exceed = 20,
     _damage_by_wind_speed = 2,
     _hard_damage = true,
-    _min_attack_angle = 0.8,
+    _min_attack_angle = -1.5,
     _max_attack_angle = 90,
     _elevator_auto_estabilize = 100,
     _tail_lift_min_speed = 2,
