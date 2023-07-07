@@ -54,7 +54,7 @@ function albatros_d5.step_additional_function(self)
     self.cabin:set_bone_position("fuel", {x=3.44,y=3.6,z=-4.05}, {x=0,y=0,z=fuel_angle})
 
     --altimeter
-    local pos = self.object:get_pos()
+    local pos = self._curr_pos
     local altitude = (pos.y / 0.32) / 100
     local hour, minutes = math.modf( altitude )
     hour = math.fmod (hour, 10)
