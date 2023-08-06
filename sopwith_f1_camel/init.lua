@@ -1,11 +1,11 @@
 
 
-albatros_d5={}
+sopwith_camel={}
 
-function albatros_d5.register_parts_method(self)
+function sopwith_camel.register_parts_method(self)
     local pos = self.object:get_pos()
 
-    local wheels=minetest.add_entity(pos,'albatros_d5:wheels')
+    local wheels=minetest.add_entity(pos,'sopwith_f1_camel:wheels')
     wheels:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
     self.wheels = wheels
     airutils.add_paintable_part(self, self.wheels)
@@ -18,7 +18,10 @@ function albatros_d5.register_parts_method(self)
     local speed = airutils.plot_speed_gauge(self, 500, 150, 220)
     local rpm = airutils.plot_power_gauge(self, 500, 260, 220)
     local fuel = airutils.plot_fuel_gauge(self, 500, 380, 260)
-    self.initial_properties.textures[19] = "airutils_brown.png"..altimeter..speed..rpm..fuel
+    self.initial_properties.textures[25] = "airutils_brown.png"..altimeter..speed..rpm..fuel
+
+    self.object:set_bone_position("lower_aileron_base.l", {x=-37.391,y=-3.8097,z=-11.741}, {x=0,y=0,z=-4})
+    self.object:set_bone_position("lower_aileron_base.r", {x=37.391,y=-3.8097,z=-11.741}, {x=0,y=0,z=4})
 
     --set stick position
     self.cabin:set_bone_position("stick", {x=0,y=-3.65,z=-4}, {x=0,y=0,z=0})
@@ -30,12 +33,17 @@ function albatros_d5.register_parts_method(self)
     self.cabin:set_bone_position("climber", {x=0,y=4.32,z=-3}, {x=0,y=0,z=0})
 end
 
-function albatros_d5.destroy_parts_method(self)
+function sopwith_camel.destroy_parts_method(self)
     if self.wheels then self.wheels:remove() end
     if self.cabin then self.cabin:remove() end
 end
 
-function albatros_d5.step_additional_function(self)
+function sopwith_camel.step_additional_function(self)
+
+    local ailerons = self._rudder_angle
+    if self._invert_ailerons then ailerons = ailerons * -1 end
+    self.object:set_bone_position("aileron.r.2", {x=0,y=0,z=0}, {x=-ailerons - 90,y=0,z=0})
+    self.object:set_bone_position("aileron.l.2", {x=0,y=0,z=0}, {x=ailerons - 90,y=0,z=0})
 
     if (self.driver_name==nil) and (self.co_pilot==nil) then --pilot or copilot
         return
@@ -69,44 +77,53 @@ function albatros_d5.step_additional_function(self)
     self.cabin:set_bone_position("power", {x=1.16,y=4.32,z=-4.05}, {x=0,y=0,z=power_indicator_angle-90})
 
     self.cabin:set_bone_position("climber", {x=0,y=4.32,z=-3}, {x=0,y=0,z=0})
+
 end
 
-local lower_texture = "(albatros_d5_lower.png^[multiply:#a0def3)^(albatros_d5_lower.png^[mask:albatros_d5_marks.png)"
-albatros_d5.plane_properties = {
+local lower_texture = "(sopwith_f1_camel_lower.png^[multiply:#bab8a8)^(sopwith_f1_camel_lower.png^[mask:sopwith_f1_camel_marks.png)"
+sopwith_camel.plane_properties = {
 	initial_properties = {
 	    physical = true,
         collide_with_objects = true,
-	    collisionbox = {-1.2, -1.60, -1.2, 1.2, 1.2, 1.2}, --{-1,0,-1, 1,0.3,1},
+	    collisionbox = {-1.2, -1.95, -1.2, 1.2, 1.2, 1.2}, --{-1,0,-1, 1,0.3,1},
 	    selectionbox = {-1.2, -1.28, -1.2, 1.2, 1.2, 1.2},
 	    visual = "mesh",
         backface_culling = false,
-	    mesh = "albatros_d5_body.b3d",
+	    mesh = "sopwith_f1_camel_body.b3d",
         stepheight = 0.5,
         textures = {
-                    "airutils_black.png", --nacele
-                    "albatros_d5_painting_2.png", --asa superior
-                    "albatros_d5_painting.png", --asa inferior
-                    lower_texture, --camuflagem inferior
+                    "airutils_black.png", -- nacele
+                    "sopwith_f1_camel_upper.png", -- upper wing top
+                    "sopwith_f1_camel_upper.png", -- lower wing top
+                    lower_texture, -- upper wing low
+                    lower_texture, -- lower wing low
                     "airutils_black.png", --cabos
                     "airutils_black.png", --assento
                     "airutils_metal.png", --bequilha
-                    "albatros_d5_painting_2.png", --ailerons - sup
-                    "albatros_d5_painting_2.png", --empenagem
-                    lower_texture, --profundor inferior
-                    "albatros_d5_painting_2.png", --cone da cauda
-                    "airutils_black.png", --escapamento
-                    "albatros_d5_painting_2.png", --estab horizontal
-                    "albatros_d5_painting_2.png", --estab vertical
-                    "albatros_d5_painting.png", --fuselagem
-                    "albatros_d5_propeller.png", --helice
-                    "airutils_painting_2.png", --cubo helice
+                    "airutils_metal.png", --nariz
+                    "airutils_metal.png", --nacele motor
+                    "airutils_black.png", --fundo motor
+                    "sopwith_f1_camel_rudder.png", --rudder
+                    "sopwith_f1_camel_upper.png", -- top elevator and ailerons
+                    lower_texture, -- low elevator and ailerons
+                    "sopwith_f1_camel_upper.png", -- hor estab top
+                    lower_texture, -- hor estab low
+                    "sopwith_f1_camel_upper.png", -- vert estab
+                    "sopwith_f1_camel_upper.png", -- fuselagem - pt1
+                    "sopwith_f1_camel_cabin_painting.png", --fuselagem - nacele
+                    "sopwith_f1_propeller.png", -- helice
+                    "airutils_black.png", -- cubo helice
+                    "sopwith_f1_camel_radial_cilinder.png", -- motor pt 1
+                    "sopwith_f1_camel_radial_cilinder_2.png", -- motor pt 2
                     "airutils_brown.png", --nacele
                     "airutils_brown.png", --painel
                     "airutils_black.png", --armas
-                    "airutils_painting.png", --montantes
-                    "airutils_black2.png", --motor
-                    "airutils_black.png", --cabecotes
-                    "albatros_d5_painting_2.png", --nariz
+                    "airutils_brown.png", --mont asas
+                    "airutils_metal.png", --detalhe topo asa
+                    "airutils_red.png",
+                    "airutils_green.png",
+                    "airutils_blue.png",
+                    "airutils_metal.png",
                     },
     },
     textures = {},
@@ -123,14 +140,14 @@ albatros_d5.plane_properties = {
     springiness = 0.1,
     buoyancy = 1.02,
     physics = airutils.physics,
-    _vehicle_name = "Albatros",
+    _vehicle_name = "Sopwith F1 Camel",
     _use_camera_relocation = true,
     _seats = {{x=0,y=-1.5,z=-8.89039},},
     _seats_rot = {0},  --necessary when using reversed seats
     _have_copilot = false, --wil use the second position of the _seats list
     _max_plane_hp = 80,
     _enable_fire_explosion = true,
-    _longit_drag_factor = 0.13*0.13,
+    _longit_drag_factor = 0.135*0.135,
     _later_drag_factor = 2.0,
     _wing_angle_of_attack = 2.0,
     _wing_span = 10, --meters
@@ -146,7 +163,7 @@ albatros_d5.plane_properties = {
     _tail_lift_min_speed = 2,
     _tail_lift_max_speed = 8,
     _max_engine_acc = 8.5,
-    _tail_angle = 14, --degrees
+    _tail_angle = 21, --degrees
     _lift = 16,
     _trunk_slots = 2, --the trunk slots
     _rudder_limit = 40.0,
@@ -154,13 +171,13 @@ albatros_d5.plane_properties = {
     _elevator_response_attenuation = 10,
     _pitch_intensity = 0.4,
     _yaw_intensity = 20,
-    _yaw_turn_rate = 14,
-    _elevator_pos = {x=0, y=0.15842, z=-44.153},
-    _rudder_pos = {x=0,y=6.76323,z=-38.4982},
-    _aileron_r_pos = {x=32.2813,y=10.2,z=-6.01676},
-    _aileron_l_pos = {x=-32.2813,y=10.2,z=-6.01676},
-    _color = "#c2914f",
-    _color_2 = "#919469",
+    _yaw_turn_rate = 16,
+    _elevator_pos = {x=0, y=0.35842, z=-36.353},
+    _rudder_pos = {x=0,y=4.9834,z=-36.382},
+    _aileron_r_pos = {x=37.495,y=11.78,z=-6.0498},
+    _aileron_l_pos = {x=-37.495,y=11.78,z=-6.0498},
+    _color = "#877d1a",
+    _color_2 = "#9a6534",
     _rudder_angle = 0,
     _acceleration = 0,
     _engine_running = false,
@@ -181,17 +198,17 @@ albatros_d5.plane_properties = {
     _inv = nil,
     _inv_id = "",
     _collision_sound = "airutils_collision", --the col sound
-    _engine_sound = "albatros_d5_engine",
-    _painting_texture = {"airutils_painting.png","albatros_d5_painting.png",}, --the texture to paint
-    _painting_texture_2 = {"airutils_painting_2.png","albatros_d5_painting_2.png",}, --the texture to paint
-    _mask_painting_associations = {["albatros_d5_painting.png"] = "albatros_d5_marks.png",["albatros_d5_lower.png"] = "albatros_d5_marks.png",["albatros_d5_painting_2.png"] = "albatros_d5_marks.png",},
-    _register_parts_method = albatros_d5.register_parts_method, --the method to register plane parts
-    _destroy_parts_method = albatros_d5.destroy_parts_method,
+    _engine_sound = "sopwith_f1_camel_engine",
+    _painting_texture = {"airutils_painting.png","sopwith_f1_camel_upper.png",}, --the texture to paint
+    _painting_texture_2 = {"airutils_painting_2.png","sopwith_f1_camel_cabin_painting.png",}, --the texture to paint
+    _mask_painting_associations = {["sopwith_f1_camel_upper.png"] = "sopwith_f1_camel_marks.png",["sopwith_f1_camel_lower.png"] = "sopwith_f1_camel_marks.png",["sopwith_f1_camel_cabin_painting.png"] = "albatros_d5_marks.png",},
+    _register_parts_method = sopwith_camel.register_parts_method, --the method to register plane parts
+    _destroy_parts_method = sopwith_camel.destroy_parts_method,
     _plane_y_offset_for_bullet = 1,
     _custom_punch_when_attached = ww1_planes_lib._custom_punch_when_attached, --the method to execute click action inside the plane
     _custom_pilot_formspec = ww1_planes_lib.pilot_formspec,
     --_custom_pilot_formspec = airutils.pilot_formspec,
-    _custom_step_additional_function = albatros_d5.step_additional_function,
+    _custom_step_additional_function = sopwith_camel.step_additional_function,
 
     get_staticdata = airutils.get_staticdata,
     on_deactivate = airutils.on_deactivate,
@@ -202,14 +219,14 @@ albatros_d5.plane_properties = {
     on_rightclick = airutils.on_rightclick,
 }
 
-dofile(minetest.get_modpath("albatros_d5") .. DIR_DELIM .. "crafts.lua")
-dofile(minetest.get_modpath("albatros_d5") .. DIR_DELIM .. "entities.lua")
+dofile(minetest.get_modpath("sopwith_f1_camel") .. DIR_DELIM .. "crafts.lua")
+dofile(minetest.get_modpath("sopwith_f1_camel") .. DIR_DELIM .. "entities.lua")
 
 --
 -- items
 --
 
-settings = Settings(minetest.get_worldpath() .. "/albatros_d5_settings.conf")
+settings = Settings(minetest.get_worldpath() .. "/sopwith_f1_camel_settings.conf")
 local function fetch_setting(name)
     local sname = name
     return settings and settings:get(sname) or minetest.settings:get(sname)

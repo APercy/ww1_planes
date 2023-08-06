@@ -38,7 +38,7 @@ function ww1_planes_lib._custom_punch_when_attached(self, player)
         if self._vehicle_custom_data._ww1_loaded_bullets > 0 then
             local total_bullets = self._vehicle_custom_data._ww1_loaded_bullets
             local player_proterties = player:get_properties()
-            ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 150)
+            ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 300)
             self._vehicle_custom_data._ww1_loaded_bullets = total_bullets - 1
         end
     end
@@ -65,7 +65,7 @@ minetest.register_chatcommand("ww1_plane_eject", {
             if seat ~= nil then
                 local entity = seat:get_luaentity()
                 if entity then
-                    if entity.name == "albatros_d5:albatros_d5" then
+                    if entity.name == "albatros_d5:albatros_d5" or entity.name == "sopwith_f1_camel:sopwith_f1_camel" then
                         if entity.driver_name == name then
                             lib_planes.dettachPlayer(entity, player)
                         elseif entity._passenger == name then

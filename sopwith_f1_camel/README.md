@@ -1,4 +1,4 @@
-Minetest 5.4 mod: Albatros D5
+Minetest 5.4 mod: Sopwith F1 Camel
 ========================================
 
 -----------------------

@@ -23,6 +23,7 @@ function ww1_planes_lib.spawn_bullet(self, player_name, ent_name, strength)
 
 	local lua_ent = bullet_obj:get_luaentity()
 	lua_ent.shooter_name = player_name
+    lua_ent.damage = lua_ent.damage * (math.random(5, 15)/10)
 	bullet_obj:set_yaw(yaw)
 	local velocity = vector.multiply(dir, strength)
     velocity = vector.add(velocity, curr_velocity) --sum with the current velocity
