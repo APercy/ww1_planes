@@ -78,7 +78,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                 if ent._vehicle_custom_data then
                     if not ent._vehicle_custom_data._ww1_loaded_bullets then ent._vehicle_custom_data._ww1_loaded_bullets = 0 end
                     local bullets_to_take = 300 - ent._vehicle_custom_data._ww1_loaded_bullets
-                    if bullets_to_take then
+                    if bullets_to_take > 0 then
                         local stack = ItemStack("ww1_planes_lib:bullet1 " .. bullets_to_take)
                         local inv = airutils.get_inventory(ent)
                         if inv then
@@ -97,8 +97,14 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                             else
                                 minetest.chat_send_player(name, core.colorize('#ff0000', " >>> There is no bullet on plane's inventory to reload."))
                             end
+                        else
+                            minetest.chat_send_player(name, core.colorize('#ff0000', " >>> The guns reload seems jammed."))
                         end
+                    else
+                        minetest.chat_send_player(name, core.colorize('#ff0000', " >>> The reload isn't necessary now."))
                     end
+                else
+                    minetest.chat_send_player(name, core.colorize('#ff0000', " >>> Something wrong happened on guns reload."))
                 end
             end
             if fields.inventory then
