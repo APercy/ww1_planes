@@ -79,13 +79,23 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                     if not ent._vehicle_custom_data._ww1_loaded_bullets then ent._vehicle_custom_data._ww1_loaded_bullets = 0 end
                     local bullets_to_take = 300 - ent._vehicle_custom_data._ww1_loaded_bullets
                     if bullets_to_take > 0 then
-                        local stack = ItemStack("ww1_planes_lib:bullet1 " .. bullets_to_take)
                         local inv = airutils.get_inventory(ent)
                         if inv then
+                            local total_taken = 0
+                            local stack = ItemStack("ww1_planes_lib:bullet1 " .. bullets_to_take)
                             local taken = inv:remove_item("main", stack)
-                            ent._vehicle_custom_data._ww1_loaded_bullets = ent._vehicle_custom_data._ww1_loaded_bullets + taken:get_count()
+                            total_taken = taken:get_count()
+
+                            --lets use ranged weapons ammunition
+                            if total_taken < bullets_to_take then
+                                stack = ItemStack("rangedweapons:762mm " .. bullets_to_take - total_taken)
+                                taken = inv:remove_item("main", stack)
+                                total_taken = total_taken + taken:get_count()
+                            end
+
+                            ent._vehicle_custom_data._ww1_loaded_bullets = ent._vehicle_custom_data._ww1_loaded_bullets + total_taken
                             airutils.save_inventory(ent)
-                            if taken:get_count() > 0 then
+                            if total_taken > 0 then
                                 minetest.chat_send_player(name, core.colorize('#00ff00', " >>> Guns reloaded."))
                                 minetest.sound_play("ww1_planes_gun_reload", {
                                     object = ent.object,

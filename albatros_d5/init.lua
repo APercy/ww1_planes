@@ -124,6 +124,7 @@ albatros_d5.plane_properties = {
     buoyancy = 1.02,
     physics = airutils.physics,
     _vehicle_name = "Albatros",
+    _needed_licence = ww1_planes_lib.licence_name,
     _use_camera_relocation = true,
     _seats = {{x=0,y=-1.5,z=-8.89039},},
     _seats_rot = {0},  --necessary when using reversed seats

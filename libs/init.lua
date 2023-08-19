@@ -1,6 +1,7 @@
 
 local S = minetest.get_translator(minetest.get_current_modname())
 ww1_planes_lib = {}
+ww1_planes_lib.licence_name = "WW1_flight_licence"
 
 dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "bullets.lua")
 dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "forms.lua") --custom form for the planes
@@ -46,8 +47,17 @@ end
 
 ww1_planes_lib.register_bullet("ww1_planes_lib:bullet1", "ww1_planes_bullet_ico.png", "ww1_planes_box_texture.png", "Plane bullet", 8, 300)
 
-minetest.register_privilege("WW1_fighter_licence", {
-    description = "Gives a fighter licence to the player",
+minetest.register_craft({
+	output = "ww1_planes_lib:bullet1 50",
+	recipe = {
+		{"default:bronze_ingot", "default:bronze_ingot", "default:bronze_ingot"},
+		{"default:bronze_ingot", "tnt:gunpowder", "default:bronze_ingot"},
+		{"default:bronze_ingot", "tnt:gunpowder", "default:bronze_ingot"},
+	}
+})
+
+minetest.register_privilege("WW1_flight_licence", {
+    description = "Gives a flight licence to the player",
     give_to_singleplayer = true
 })
 

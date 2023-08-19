@@ -1,15 +1,4 @@
 
--- wing
-minetest.register_craftitem("sopwith_f1_camel:wings",{
-	description = "Sopwith F1 Camel wings",
-	inventory_image = "albatros_d5_wings.png",
-})
--- fuselage
-minetest.register_craftitem("sopwith_f1_camel:fuselage",{
-	description = "Sopwith F1 Camel fuselage",
-	inventory_image = "albatros_d5_fuselage.png",
-})
-
 -- Albatros
 minetest.register_craftitem("sopwith_f1_camel:sopwith_f1_camel", {
 	description = "Sopwith F1 Camel",
@@ -42,33 +31,4 @@ minetest.register_craftitem("sopwith_f1_camel:sopwith_f1_camel", {
 	end,
 })
 
---
--- crafting
---
 
-if minetest.get_modpath("default") then
-    --[[minetest.register_craft({
-	    output = "sopwith_f1_camel:wings",
-	    recipe = {
-		    {"wool:white", "farming:string", "wool:white"},
-		    {"group:wood", "group:wood", "group:wood"},
-		    {"wool:white", "default:steel_ingot", "wool:white"},
-	    }
-    })
-    minetest.register_craft({
-	    output = "sopwith_f1_camel:fuselage",
-	    recipe = {
-		    {"default:steel_ingot", "default:diamondblock", "default:steel_ingot"},
-		    {"wool:white", "default:steel_ingot",  "wool:white"},
-		    {"default:steel_ingot", "default:mese_block",   "default:steel_ingot"},
-	    }
-    })
-
-	minetest.register_craft({
-		output = "sopwith_f1_camel:albatros_d5",
-		recipe = {
-			{"sopwith_f1_camel:wings",},
-			{"sopwith_f1_camel:fuselage",},
-		}
-	})]]--
-end

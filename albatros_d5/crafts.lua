@@ -1,15 +1,4 @@
 
--- wing
-minetest.register_craftitem("albatros_d5:wings",{
-	description = "Albatros wings",
-	inventory_image = "albatros_d5_wings.png",
-})
--- fuselage
-minetest.register_craftitem("albatros_d5:fuselage",{
-	description = "Albatros fuselage",
-	inventory_image = "albatros_d5_fuselage.png",
-})
-
 -- Albatros
 minetest.register_craftitem("albatros_d5:albatros_d5", {
 	description = "Albatros D5",
@@ -42,33 +31,4 @@ minetest.register_craftitem("albatros_d5:albatros_d5", {
 	end,
 })
 
---
--- crafting
---
 
-if minetest.get_modpath("default") then
-    --[[minetest.register_craft({
-	    output = "albatros_d5:wings",
-	    recipe = {
-		    {"wool:white", "farming:string", "wool:white"},
-		    {"group:wood", "group:wood", "group:wood"},
-		    {"wool:white", "default:steel_ingot", "wool:white"},
-	    }
-    })
-    minetest.register_craft({
-	    output = "albatros_d5:fuselage",
-	    recipe = {
-		    {"default:steel_ingot", "default:diamondblock", "default:steel_ingot"},
-		    {"wool:white", "default:steel_ingot",  "wool:white"},
-		    {"default:steel_ingot", "default:mese_block",   "default:steel_ingot"},
-	    }
-    })
-
-	minetest.register_craft({
-		output = "albatros_d5:albatros_d5",
-		recipe = {
-			{"albatros_d5:wings",},
-			{"albatros_d5:fuselage",},
-		}
-	})]]--
-end
