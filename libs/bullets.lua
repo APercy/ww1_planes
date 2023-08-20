@@ -30,16 +30,57 @@ function ww1_planes_lib.spawn_bullet(self, player_name, ent_name, strength)
 	bullet_obj:set_velocity(velocity)
 end
 
+local function add_hole(moveresult, obj_pos)
+    if moveresult == nil then return end
+    if minetest.registered_nodes[minetest.get_node(moveresult.collisions[1].node_pos).name]  and
+        minetest.registered_nodes[minetest.get_node(moveresult.collisions[1].node_pos).name].tiles and
+        minetest.registered_nodes[minetest.get_node(moveresult.collisions[1].node_pos).name].tiles[1]
+    then
+        local hit_texture = minetest.registered_nodes[minetest.get_node(moveresult.collisions[1].node_pos).name].tiles[1]
+
+        if hit_texture.name ~= nil then
+            hit_texture = hit_texture.name
+        end
+
+        minetest.add_particle({
+            pos = obj_pos,
+            velocity = {x=0, y=0, z=0},
+          	acceleration = {x=0, y=0, z=0},
+            expirationtime = 30,
+            size = math.random(10,20)/10,
+            collisiondetection = false,
+            vertical = false,
+            texture = "ww1_planes_bullet_hole.png",
+            glow = 0,
+        })
+
+        for i=1,math.random(4,8) do
+            minetest.add_particle({
+                pos = obj_pos,
+                velocity = {x=math.random(-3.0,3.0), y=math.random(2.0,5.0), z=math.random(-3.0,3.0)},
+              	acceleration = {x=math.random(-3.0,3.0), y=math.random(-10.0,-15.0), z=math.random(-3.0,3.0)},
+                expirationtime = 0.5,
+                size = math.random(10,20)/10,
+                collisiondetection = true,
+                vertical = false,
+                texture = ""..hit_texture.."^[resize:4x4".."",
+                glow = 0,
+            })
+        end
+    end
+end
 
 function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, description, bullet_damage, bullets_max_stack)
     bullets_max_stack = bullets_max_stack or 99
 	minetest.register_entity(ent_name, {
 		hp_max = 5,
-		physical = false,
+		physical = true,
 		collisionbox = {-0.1, -0.1, -0.1, 0.1, 0.1, 0.1},
 		visual = "sprite",
 		textures = {bullet_texture},
+        lastpos = {},
 		visual_size = {x = 0.15, y = 0.15},
+        collide_with_objects = false,
 		old_pos = nil,
 		velocity = nil,
 		is_liquid = nil,
@@ -51,7 +92,7 @@ function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, des
 			self.object:set_acceleration({x = 0, y = -9.81, z = 0})
 		end,
 
-		on_step = function(self, dtime)
+		on_step = function(self, dtime, moveresult)
 			local pos = self.object:get_pos()
             if not pos then return end
 			self.old_pos = self.old_pos or pos
@@ -132,9 +173,22 @@ function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, des
                         }, true)
 						self.object:remove()
 
+                        --add the hole
+                        add_hole(moveresult, pos)
+
+                        --explode TNT
+                        local node = minetest.get_node(pos)
+                        local node_name = node.name
+                        if node_name == "tnt:tnt" then minetest.set_node(pos, {name = "tnt:tnt_burning"}) end
+
 						if minetest.is_protected(pos, self.shooter_name) then
 							return
 						end
+
+                        local player = minetest.get_player_by_name(self.shooter_name)
+                        if player then
+                            minetest.node_punch(pos, node, player, {damage_groups={fleshy=20}})--{type = "punch"})
+                        end
 
 						--replace node
 						--minetest.set_node(pos, {name = "air"})
