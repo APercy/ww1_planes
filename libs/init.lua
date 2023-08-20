@@ -41,6 +41,13 @@ function ww1_planes_lib._custom_punch_when_attached(self, player)
             local player_proterties = player:get_properties()
             ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 300)
             self._vehicle_custom_data._ww1_loaded_bullets = total_bullets - 1
+
+            minetest.after(0.1, function()
+                if player then
+                    ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 300)
+                    self._vehicle_custom_data._ww1_loaded_bullets = total_bullets - 2
+                end
+            end)
         end
     end
 end
