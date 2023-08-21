@@ -87,12 +87,19 @@ function ww1_planes_lib.register_bullet(ent_name, inv_image, bullet_texture, des
 		shooter_name = "",
         damage = bullet_damage,
 		groups = {bullet = 1},
+        _total_time = 0,
 
 		on_activate = function(self)
 			self.object:set_acceleration({x = 0, y = -9.81, z = 0})
 		end,
 
 		on_step = function(self, dtime, moveresult)
+            self._total_time = self._total_time + dtime
+            if self._total_time > 5 then
+                --destroy after 5 seconds
+                self.object:remove()
+            end
+
 			local pos = self.object:get_pos()
             if not pos then return end
 			self.old_pos = self.old_pos or pos

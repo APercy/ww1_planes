@@ -29,7 +29,7 @@ function ww1_planes_lib.register_bomb(radius, ent_name, inv_image, bomb_texture,
 end
 
 function ww1_planes_lib.remove_nodes(pos, radius, disable_drop_nodes)
-    if not disable_drop_nodes then disable_drop_nodes = true end
+    if not disable_drop_nodes then disable_drop_nodes = false end
     local pr = PseudoRandom(os.time())
     for z = -radius, radius do
         for y = -radius, radius do
@@ -43,7 +43,7 @@ function ww1_planes_lib.remove_nodes(pos, radius, disable_drop_nodes)
             end
         end
     end
-    if disable_drop_nodes ~= false then
+    if disable_drop_nodes == false then
         local radius = radius
         for z = -radius, radius do
             for y = -radius, radius do
