@@ -1,13 +1,14 @@
 
-function ww1_planes_lib.register_bomb(radius) 
-    local one_step = false    
-    minetest.register_entity("ww1_planes_lib:bomb_"..radius, {   
+function ww1_planes_lib.register_bomb(radius, ent_name, inv_image, bomb_texture, description, bomb_max_stack) 
+    local one_step = false
+    bomb_max_stack = bomb_max_stack or 99
+    minetest.register_entity(ent_name, {   
         initial_properties = {
             physical = true,
             visual = "sprite",
             backface_culling = false,
             visual_size = {x = 1, y = 1, z = 1},
-            textures = {"ww1_planes_lib_bomb.png"},
+            textures = {bomb_texture},
             collisionbox = {-.5, -.5, -.25, .5, .5, .25},
             pointable = false,
             static_save = false,
@@ -16,10 +17,15 @@ function ww1_planes_lib.register_bomb(radius)
             local obj = self.object
             obj:set_acceleration({x=0,y=-9.8,z=0})
             if moveresult.collides and moveresult.collisions then
-                internal.explode(obj, radius)
+                ww1_planes_lib.explode(obj, radius)
             end
         end
     })
+	minetest.register_craftitem(ent_name, {
+		description = description,
+		inventory_image = inv_image,
+		stack_max = bomb_max_stack,
+	})
 end
 
 function ww1_planes_lib.remove_nodes(pos, radius, disable_drop_nodes)
@@ -32,17 +38,13 @@ function ww1_planes_lib.remove_nodes(pos, radius, disable_drop_nodes)
                 local r = vector.length(vector.new(x, y, z))
                 if (radius * radius) / (r * r) >= (pr:next(80, 125) / 100) then
                     local p = {x = pos.x + x, y = pos.y + y, z = pos.z + z}
-                    if check_immortal(p) == true then
-                        return
-                    else
-                        minetest.remove_node(p)
-                    end
+                    minetest.remove_node(p)
                 end
             end
         end
     end
     if disable_drop_nodes ~= false then
-        local radius = radius+internal.drop_radius_addition
+        local radius = radius
         for z = -radius, radius do
             for y = -radius, radius do
                 for x = -radius, radius do
@@ -50,11 +52,7 @@ function ww1_planes_lib.remove_nodes(pos, radius, disable_drop_nodes)
                     local r = vector.length(vector.new(x, y, z))
                     if (radius * radius) / (r * r) >= (pr:next(80, 125) / 100) then
                         local p = {x = pos.x + x, y = pos.y + y, z = pos.z + z}
-                        if check_immortal(p) == true then
-                            return
-                        else
-                            minetest.spawn_falling_node(p)
-                        end
+                        minetest.spawn_falling_node(p)
                     end
                 end
             end
@@ -68,7 +66,7 @@ function ww1_planes_lib.explode(object, radius)
 
     local objs = minetest.get_objects_inside_radius(pos, radius)
     -- remove nodes
-    internal.remove_nodes(pos, radius)
+    ww1_planes_lib.remove_nodes(pos, radius)
     --damage entites/players
 	for _, obj in pairs(objs) do
 		local obj_pos = obj:get_pos()
@@ -110,35 +108,29 @@ function ww1_planes_lib.explode(object, radius)
     object:remove()
 end
 
-function ww1_planes_lib.DropBomb(self, player)
-    local s = self.speed_a
-    local team = ctf_teams.get(player)
-    function drop(color)
-        local inventory_item = "ctf_airplane_extras:missile_token"
-        local inv = player:get_inventory()
-        local weild = player:get_wielded_item()
-        
-        if check_override(wield) then
-            return
-        end
+function ww1_planes_lib.spawn_bomb(self, player_name, ent_name, strength)
+	local pos = self.object:get_pos()
+    if not pos then return end
+    local rotation = airutils.normalize_rotations(self.object:get_rotation())
+    local dir = airutils.rot_to_dir(rotation)
+    local yaw = rotation.y
+    local curr_velocity = self.object:get_velocity() --we could be flying
+	local bomb_obj = nil
+	bomb_obj = minetest.add_entity(pos, ent_name)
 
-        if (os.time()-last_drop >= bomb_dejitter_time and s < internal.speed) then -- to avoid bombs blowing up bombs, and also is a control factor
-            last_drop = os.time()
-            if inv:contains_item("main", inventory_item) then
-                local stack = ItemStack(inventory_item .. " 1")
-                inv:remove_item("main", stack)
-                if ctf_teams.get(player) == color then
-                    minetest.add_entity(player:get_pos(), "ctf_airplane_extras:missile_" .. color)
-                else
-                    minetest.add_entity(player:get_pos(), "ctf_airplane_extras:missile_blue")
-                end
-            else
-                return
-            end
-        end
-    end
-    drop("red")
-    drop("orange")
-    drop("purple")
-    drop("blue")
+	if not bomb_obj then
+		return
+	end
+    minetest.sound_play("default_dug_metal.1", {
+        object = self.object,
+        max_hear_distance = 50,
+        gain = 1.0,
+        fade = 0.0,
+        pitch = 1.0,
+    }, true)
+
+	local velocity = vector.multiply(dir, strength)
+    velocity = vector.add(velocity, curr_velocity) --sum with the current velocity
+	bomb_obj:set_velocity(velocity)
 end
+

@@ -4,6 +4,7 @@ ww1_planes_lib = {}
 ww1_planes_lib.licence_name = "WW1_flight_licence"
 
 dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "bullets.lua")
+dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "bombs.lua")
 dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "forms.lua") --custom form for the planes
 
 --
@@ -32,27 +33,40 @@ initial_properties = {
 	
 })
 
-
 --returns 0 for old, 1 for new
 function ww1_planes_lib._custom_punch_when_attached(self, player)
-    if self._vehicle_custom_data._ww1_loaded_bullets then
-        if self._vehicle_custom_data._ww1_loaded_bullets > 0 then
-            local total_bullets = self._vehicle_custom_data._ww1_loaded_bullets
-            local player_proterties = player:get_properties()
-            ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 300)
-            self._vehicle_custom_data._ww1_loaded_bullets = total_bullets - 1
+    local ctrl = player:get_player_control()
+    if ctrl.aux1 then
+        local inv = airutils.get_inventory(self)
+        if not inv then return end
 
-            minetest.after(0.1, function()
-                if player then
-                    ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 300)
-                    self._vehicle_custom_data._ww1_loaded_bullets = total_bullets - 2
-                end
-            end)
+        local total_taken = 0
+        local stack = ItemStack("ww1_planes_lib:bomb1 1")
+        local taken = inv:remove_item("main", stack)
+        
+        ww1_planes_lib.spawn_bomb(self, player:get_player_name(), "ww1_planes_lib:bomb1", 1)
+    else
+        if self._vehicle_custom_data._ww1_loaded_bullets then
+            if self._vehicle_custom_data._ww1_loaded_bullets > 0 then
+                local total_bullets = self._vehicle_custom_data._ww1_loaded_bullets
+                ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 300)
+                self._vehicle_custom_data._ww1_loaded_bullets = total_bullets - 1
+
+                minetest.after(0.1, function()
+                    if player then
+                        ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 300)
+                        self._vehicle_custom_data._ww1_loaded_bullets = total_bullets - 2
+                    end
+                end)
+            end
         end
     end
 end
 
 ww1_planes_lib.register_bullet("ww1_planes_lib:bullet1", "ww1_planes_bullet_ico.png", "ww1_planes_box_texture.png", "Plane bullet", 8, 300)
+
+--ww1_planes_lib.register_bomb(radius, ent_name, inv_image, bomb_texture, description, bomb_max_stack) 
+ww1_planes_lib.register_bomb(5, "ww1_planes_lib:bomb1", "ww1_planes_lib_bomb.png", "ww1_planes_lib_bomb.png", "A bomb to drop over the enemy field", 5) 
 
 minetest.register_craft({
 	output = "ww1_planes_lib:bullet1 50",
