@@ -43,8 +43,12 @@ function ww1_planes_lib._custom_punch_when_attached(self, player)
         local total_taken = 0
         local stack = ItemStack("ww1_planes_lib:bomb1 1")
         local taken = inv:remove_item("main", stack)
-        
-        ww1_planes_lib.spawn_bomb(self, player:get_player_name(), "ww1_planes_lib:bomb1", 1)
+        local total_taken = taken:get_count()
+
+        if total_taken > 0 then
+            airutils.save_inventory(self)
+            ww1_planes_lib.spawn_bomb(self, player:get_player_name(), "ww1_planes_lib:bomb1", 1)
+        end
     else
         if self._vehicle_custom_data._ww1_loaded_bullets then
             if self._vehicle_custom_data._ww1_loaded_bullets > 0 then
