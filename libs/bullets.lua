@@ -32,6 +32,8 @@ end
 
 local function add_hole(moveresult, obj_pos)
     if moveresult == nil then return end
+    if moveresult.collisions[1].node_pos == nil then return end
+
     if minetest.registered_nodes[minetest.get_node(moveresult.collisions[1].node_pos).name]  and
         minetest.registered_nodes[minetest.get_node(moveresult.collisions[1].node_pos).name].tiles and
         minetest.registered_nodes[minetest.get_node(moveresult.collisions[1].node_pos).name].tiles[1]

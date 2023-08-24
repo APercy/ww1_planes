@@ -62,16 +62,21 @@ end
 
 function ww1_planes_lib.explode(object, radius)
     local pos = object:get_pos()
-    airutils.add_destruction_effects(pos, radius, 1)
+    airutils.add_destruction_effects(pos, radius + 2, true)
 
     local objs = minetest.get_objects_inside_radius(pos, radius)
     -- remove nodes
-    ww1_planes_lib.remove_nodes(pos, radius)
+    local ent = object:get_luaentity()
+    if ent.shooter_name then
+	    if minetest.is_protected(pos, ent.shooter_name) == false then
+	        ww1_planes_lib.remove_nodes(pos, radius)
+	    end
+    end
     --damage entites/players
 	for _, obj in pairs(objs) do
 		local obj_pos = obj:get_pos()
 		local dist = math.max(1, vector.distance(pos, obj_pos))
-        local damage = (4 / dist) * radius
+        local damage = (50 / dist) * radius
         
         if obj:is_player() then
             obj:set_hp(obj:get_hp() - damage)
@@ -128,6 +133,9 @@ function ww1_planes_lib.spawn_bomb(self, player_name, ent_name, strength)
         fade = 0.0,
         pitch = 1.0,
     }, true)
+
+	local lua_ent = bomb_obj:get_luaentity()
+	lua_ent.shooter_name = player_name
 
 	local velocity = vector.multiply(dir, strength)
     velocity = vector.add(velocity, curr_velocity) --sum with the current velocity

@@ -118,6 +118,10 @@ minetest.register_chatcommand("ww1_plane_eject", {
 	end
 })
 
+minetest.register_chatcommand("damage_bypass_protection", {
+
+})
+
 --[[minetest.register_chatcommand("ww1_plane_manual", {
 	params = "",
 	description = "Planes operation manual",
