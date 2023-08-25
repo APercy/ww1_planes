@@ -73,7 +73,7 @@ function ww1_planes_lib.explode(object, radius)
     end
 
     --damage entites/players
-    airutils.add_blast_damage(pos, radius + 4)
+    airutils.add_blast_damage(pos, radius + 4, 50)
 
     object:remove()
 end
