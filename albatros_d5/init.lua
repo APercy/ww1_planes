@@ -129,7 +129,7 @@ albatros_d5.plane_properties = {
     _seats = {{x=0,y=-1.5,z=-8.89039},},
     _seats_rot = {0},  --necessary when using reversed seats
     _have_copilot = false, --wil use the second position of the _seats list
-    _max_plane_hp = 80,
+    _max_plane_hp = 50,
     _enable_fire_explosion = true,
     _longit_drag_factor = 0.13*0.13,
     _later_drag_factor = 2.0,
