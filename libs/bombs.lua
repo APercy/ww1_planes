@@ -66,10 +66,17 @@ function ww1_planes_lib.explode(object, radius)
 
     -- remove nodes
     local ent = object:get_luaentity()
-    if ent.shooter_name then
-	    if minetest.is_protected(pos, ent.shooter_name) == false then
-	        ww1_planes_lib.remove_nodes(pos, radius)
-	    end
+    if ww1_planes_lib.bypass_protection == false then
+        local name = ""
+        if ent.shooter_name then
+            name = ""
+        end
+
+        if minetest.is_protected(pos, name) == false then
+            ww1_planes_lib.remove_nodes(pos, radius)
+        end
+    else
+        ww1_planes_lib.remove_nodes(pos, radius)
     end
 
     --damage entites/players

@@ -1,7 +1,14 @@
+local storage = minetest.get_mod_storage()
 
 local S = minetest.get_translator(minetest.get_current_modname())
 ww1_planes_lib = {}
 ww1_planes_lib.licence_name = "WW1_flight_licence"
+
+local load_bypass_protection = storage:get_int("bypass_protection")
+ww1_planes_lib.bypass_protection = false
+-- 1 == true ---- 2 == false
+if load_bypass_protection == 1 then ww1_planes_lib.bypass_protection = true end
+
 
 dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "bullets.lua")
 dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "bombs.lua")
@@ -86,40 +93,24 @@ minetest.register_privilege("WW1_flight_licence", {
     give_to_singleplayer = true
 })
 
-minetest.register_chatcommand("ww1_plane_eject", {
-	params = "",
-	description = "Ejects from a WW1 plane",
-	privs = {interact = true},
-	func = function(name, param)
-        local colorstring = core.colorize('#ff0000', " >>> you are not inside a WW1 plane")
-        local player = minetest.get_player_by_name(name)
-        local attached_to = player:get_attach()
-
-		if attached_to ~= nil then
-            local seat = attached_to:get_attach()
-            if seat ~= nil then
-                local entity = seat:get_luaentity()
-                if entity then
-                    if entity.name == "albatros_d5:albatros_d5" or entity.name == "sopwith_f1_camel:sopwith_f1_camel" then
-                        if entity.driver_name == name then
-                            lib_planes.dettachPlayer(entity, player)
-                        elseif entity._passenger == name then
-                            local passenger = minetest.get_player_by_name(entity._passenger)
-                            lib_planes.dettach_pax(entity, passenger)
-                        end
-                    else
-			            minetest.chat_send_player(name,colorstring)
-                    end
-                end
-            end
-		else
-			minetest.chat_send_player(name,colorstring)
-		end
-	end
-})
-
 minetest.register_chatcommand("damage_bypass_protection", {
+	params = "<true/false>",
+	description = "Set enable/disable damage to non protected nodes.",
+	privs = {server = true},
+    func = function(name, param)
+        local command = param
 
+        if command == "false" then
+            ww1_planes_lib.bypass_protection = false
+            minetest.chat_send_player(name, ">>> Environment damage is disabled")
+        else
+            ww1_planes_lib.bypass_protection = true
+            minetest.chat_send_player(name, ">>> Environment damage is enabled")
+        end
+        local save = 2
+        if ww1_planes_lib.bypass_protection == true then save = 1 end
+        storage:set_int("bypass_protection", save)
+    end,
 })
 
 --[[minetest.register_chatcommand("ww1_plane_manual", {
