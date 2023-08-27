@@ -38,7 +38,17 @@ function ww1_planes_lib.remove_nodes(pos, radius, disable_drop_nodes)
                 local r = vector.length(vector.new(x, y, z))
                 if (radius * radius) / (r * r) >= (pr:next(80, 125) / 100) then
                     local p = {x = pos.x + x, y = pos.y + y, z = pos.z + z}
-                    minetest.remove_node(p)
+                    
+	                local node = minetest.get_node(p).name
+	                local nodedef = minetest.registered_nodes[node]
+	                local is_liquid = nodedef.liquidtype ~= "none"
+                    local is_leaf = (nodedef.drawtype == "plantlike") or (nodedef.drawtype == "allfaces_optional")
+
+                    if is_leaf then
+                        minetest.set_node(pos, {name = "fire:basic_flame"})
+                    elseif not is_liquid then
+                        minetest.remove_node(p)
+                    end
                 end
             end
         end
