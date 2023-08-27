@@ -32,6 +32,9 @@ Planes can be colored by punching them with dye (left for primary color, right f
 
 ## Server Command Lines:
 - /damage_bypass_protection true
+
     destruction can be made on protected areas if this is enabled. Default value: false
+
 - /no_fixed_owner true
+
     there is no ownership on the planes, so beware, the enemy can steal it. Default: false
