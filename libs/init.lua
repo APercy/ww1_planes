@@ -9,6 +9,10 @@ ww1_planes_lib.bypass_protection = false
 -- 1 == true ---- 2 == false
 if load_bypass_protection == 1 then ww1_planes_lib.bypass_protection = true end
 
+local load_no_fixed_owner = storage:get_int("no_fixed_owner")
+ww1_planes_lib.no_fixed_owner = false
+-- 1 == true ---- 2 == false
+if load_no_fixed_owner == 1 then ww1_planes_lib.no_fixed_owner = true end
 
 dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "bullets.lua")
 dofile(minetest.get_modpath("ww1_planes_lib") .. DIR_DELIM .. "bombs.lua")
@@ -113,6 +117,27 @@ minetest.register_chatcommand("damage_bypass_protection", {
         local save = 2
         if ww1_planes_lib.bypass_protection == true then save = 1 end
         storage:set_int("bypass_protection", save)
+    end,
+})
+
+--agora ninguém é de ninguém mané!!!!
+minetest.register_chatcommand("no_fixed_owner", {
+	params = "<true/false>",
+	description = "Enable/disable the ownership revocation for the fighters. Anyone can get any plane when activated.",
+	privs = {server = true},
+    func = function(name, param)
+        local command = param
+
+        if command == "false" then
+            ww1_planes_lib.no_fixed_owner = false
+            minetest.chat_send_player(name, ">>> No Owner mode is disabled")
+        else
+            ww1_planes_lib.no_fixed_owner = true
+            minetest.chat_send_player(name, ">>> No Owner mode is enabled")
+        end
+        local save = 2
+        if ww1_planes_lib.no_fixed_owner == true then save = 1 end
+        storage:set_int("no_fixed_owner", save)
     end,
 })
 

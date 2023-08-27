@@ -36,6 +36,9 @@ function albatros_d5.destroy_parts_method(self)
 end
 
 function albatros_d5.step_additional_function(self)
+    if ww1_planes_lib.no_fixed_owner then
+        if self.owner then self.owner = "" end
+    end
 
     if (self.driver_name==nil) and (self.co_pilot==nil) then --pilot or copilot
         return

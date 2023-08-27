@@ -39,6 +39,9 @@ function sopwith_camel.destroy_parts_method(self)
 end
 
 function sopwith_camel.step_additional_function(self)
+    if ww1_planes_lib.no_fixed_owner then
+        if self.owner then self.owner = "" end
+    end
 
     local ailerons = self._rudder_angle
     if self._invert_ailerons then ailerons = ailerons * -1 end
