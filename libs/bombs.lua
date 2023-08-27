@@ -13,11 +13,12 @@ function ww1_planes_lib.register_bomb(radius, ent_name, inv_image, bomb_texture,
             pointable = false,
             static_save = false,
         },
+        bomb_radius = radius,
         on_step = function(self,var,moveresult)
             local obj = self.object
             obj:set_acceleration({x=0,y=-9.8,z=0})
             if moveresult.collides and moveresult.collisions then
-                ww1_planes_lib.explode(obj, radius)
+                ww1_planes_lib.explode(obj, self.bomb_radius)
             end
         end
     })
@@ -34,7 +35,7 @@ function ww1_planes_lib.remove_nodes(pos, radius, disable_drop_nodes)
     for z = -radius, radius do
         for y = -radius, radius do
             for x = -radius, radius do
-                -- do fancy stuff
+                -- remove the nodes
                 local r = vector.length(vector.new(x, y, z))
                 if (radius * radius) / (r * r) >= (pr:next(80, 125) / 100) then
                     local p = {x = pos.x + x, y = pos.y + y, z = pos.z + z}
@@ -45,7 +46,7 @@ function ww1_planes_lib.remove_nodes(pos, radius, disable_drop_nodes)
                     local is_leaf = (nodedef.drawtype == "plantlike") or (nodedef.drawtype == "allfaces_optional")
 
                     if is_leaf then
-                        minetest.set_node(pos, {name = "fire:basic_flame"})
+                        minetest.set_node(p, {name = "fire:basic_flame"})
                     elseif not is_liquid then
                         minetest.remove_node(p)
                     end
@@ -72,14 +73,14 @@ end
 
 function ww1_planes_lib.explode(object, radius)
     local pos = object:get_pos()
-    airutils.add_destruction_effects(pos, radius + 2, true)
+    airutils.add_destruction_effects(pos, radius + 4, true)
 
     -- remove nodes
     local ent = object:get_luaentity()
     if ww1_planes_lib.bypass_protection == false then
         local name = ""
         if ent.shooter_name then
-            name = ""
+            name = ent.shooter_name
         end
 
         if minetest.is_protected(pos, name) == false then
@@ -90,7 +91,7 @@ function ww1_planes_lib.explode(object, radius)
     end
 
     --damage entites/players
-    airutils.add_blast_damage(pos, radius + 4, 50)
+    airutils.add_blast_damage(pos, radius+6, 50)
 
     object:remove()
 end

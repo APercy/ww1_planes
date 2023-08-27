@@ -44,28 +44,31 @@ initial_properties = {
 function ww1_planes_lib._custom_punch_when_attached(self, player)
     local ctrl = player:get_player_control()
     if ctrl.aux1 then
+        local armament = "ww1_planes_lib:bomb1"
         local inv = airutils.get_inventory(self)
         if not inv then return end
 
         local total_taken = 0
-        local stack = ItemStack("ww1_planes_lib:bomb1 1")
+        local stack = ItemStack(armament.." 1")
         local taken = inv:remove_item("main", stack)
         local total_taken = taken:get_count()
 
         if total_taken > 0 then
             airutils.save_inventory(self)
-            ww1_planes_lib.spawn_bomb(self, player:get_player_name(), "ww1_planes_lib:bomb1", 1)
+            ww1_planes_lib.spawn_bomb(self, player:get_player_name(), armament, 1)
         end
     else
+        local armament = "ww1_planes_lib:bullet1"
         if self._vehicle_custom_data._ww1_loaded_bullets then
             if self._vehicle_custom_data._ww1_loaded_bullets > 0 then
+                local speed = 300
                 local total_bullets = self._vehicle_custom_data._ww1_loaded_bullets
-                ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 300)
+                ww1_planes_lib.spawn_bullet(self, player:get_player_name(), armament, speed)
                 self._vehicle_custom_data._ww1_loaded_bullets = total_bullets - 1
 
                 minetest.after(0.1, function()
                     if player then
-                        ww1_planes_lib.spawn_bullet(self, player:get_player_name(), "ww1_planes_lib:bullet1", 300)
+                        ww1_planes_lib.spawn_bullet(self, player:get_player_name(), armament, speed)
                         self._vehicle_custom_data._ww1_loaded_bullets = total_bullets - 2
                     end
                 end)
@@ -77,7 +80,7 @@ end
 ww1_planes_lib.register_bullet("ww1_planes_lib:bullet1", "ww1_planes_bullet_ico.png", "ww1_planes_box_texture.png", "Plane bullet", 8, 300)
 
 --ww1_planes_lib.register_bomb(radius, ent_name, inv_image, bomb_texture, description, bomb_max_stack) 
-ww1_planes_lib.register_bomb(5, "ww1_planes_lib:bomb1", "ww1_planes_lib_bomb.png", "ww1_planes_lib_bomb.png", "A bomb to drop over the enemy field", 5) 
+ww1_planes_lib.register_bomb(3, "ww1_planes_lib:bomb1", "ww1_planes_lib_bomb.png", "ww1_planes_lib_bomb.png", "A bomb to drop over the enemy field", 5) 
 
 minetest.register_craft({
 	output = "ww1_planes_lib:bullet1 50",
