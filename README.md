@@ -9,7 +9,7 @@ directly from plane inventory. So choose wisely what you carry on plane's invent
 
 ## Dependencies
 - [biofuel](https://content.minetest.net/packages/Lokrates/biofuel/)
-- airutils
+- [airutils](https://content.minetest.net/packages/apercy/airutils/)
 
 ## Vehicle Operation
 <kbd>W</kbd>: nose down
