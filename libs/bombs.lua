@@ -46,7 +46,13 @@ function ww1_planes_lib.remove_nodes(pos, radius, disable_drop_nodes)
                     local is_leaf = (nodedef.drawtype == "plantlike") or (nodedef.drawtype == "allfaces_optional")
 
                     if is_leaf then
-                        minetest.set_node(p, {name = "fire:basic_flame"})
+                        local node_name = "air"
+                        if airutils.is_minetest then
+                            node_name = "fire:basic_flame"
+                        elseif airutils.is_mcl then
+                            node_name = "mcl_fire:fire"
+                        end
+                        minetest.set_node(p, {name = node_name})
                     elseif not is_liquid then
                         minetest.remove_node(p)
                     end
