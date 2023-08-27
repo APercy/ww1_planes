@@ -7,6 +7,8 @@ To shot bullets, just punch. To drop bombs, hold AUX (E key) and punch. The plan
 and more can be loaded from the plane inventory using the "Reload" button. The bombs don't need a reload, it will drop
 directly from plane inventory. So choose wisely what you carry on plane's inventory.
 
+And to fly it, the user must have the priv "WW1_flight_licence"
+
 ## Dependencies
 - [biofuel](https://content.minetest.net/packages/Lokrates/biofuel/)
 - [airutils](https://content.minetest.net/packages/apercy/airutils/)
@@ -27,3 +29,9 @@ directly from plane inventory. So choose wisely what you carry on plane's invent
 <kbd>Space</kbd>: increase engine power
 
 Planes can be colored by punching them with dye (left for primary color, right for secondary). To fuel a vehicle, punch it with biofuel.
+
+## Server Command Lines:
+- /damage_bypass_protection true
+    destruction can be made on protected areas if this is enabled. Default value: false
+- /no_fixed_owner true
+    there is no ownership on the planes, so beware, the enemy can steal it. Default: false
