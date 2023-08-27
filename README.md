@@ -1,4 +1,4 @@
-[![ww1_planes](https://raw.githubusercontent.com/APercy/ww1_planes/main/screenshot.jpg)](https://github.com/APercy/ww1_planes/)
+[![ww1_planes](https://raw.githubusercontent.com/APercy/ww1_planes/main/screenshot.jpg)](https://github.com/APercy/ww1_planes)
 
 Modpack to add WWI era planes to Minetest. The main goal of this modpack is to make the the possibility of dogfights over
 Minetest skies and some bombing missions.
