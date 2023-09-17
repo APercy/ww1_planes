@@ -79,6 +79,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                     if not ent._vehicle_custom_data._ww1_loaded_bullets then ent._vehicle_custom_data._ww1_loaded_bullets = 0 end
                     local bullets_to_take = 300 - ent._vehicle_custom_data._ww1_loaded_bullets
                     if bullets_to_take > 0 then
+                        airutils.load_inventory(ent)
                         local inv = airutils.get_inventory(ent)
                         if inv then
                             local total_taken = 0
