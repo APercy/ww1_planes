@@ -80,7 +80,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                     local bullets_to_take = 300 - ent._vehicle_custom_data._ww1_loaded_bullets
                     if bullets_to_take > 0 then
                         airutils.load_inventory(ent)
-                        local inv = airutils.get_inventory(ent)
+                        local inv = nil --airutils.get_inventory(ent)
+                        if ent._inv then
+                            inv = minetest.get_inventory({type="detached", name=ent._inv_id})
+                        end
                         if inv then
                             local total_taken = 0
                             local stack = ItemStack("ww1_planes_lib:bullet1 " .. bullets_to_take)
