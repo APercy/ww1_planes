@@ -213,6 +213,8 @@ sopwith_camel.plane_properties = {
     _custom_pilot_formspec = ww1_planes_lib.pilot_formspec,
     --_custom_pilot_formspec = airutils.pilot_formspec,
     _custom_step_additional_function = sopwith_camel.step_additional_function,
+    _destroyed_ent = "sopwith_f1_camel:destroyed",
+    _drops = {["default:steel_ingot"]=6,["default:diamond"]=2,["wool:white"]=4,["default:mese_crystal"]=4},
 
     get_staticdata = airutils.get_staticdata,
     on_deactivate = airutils.on_deactivate,
