@@ -18,6 +18,17 @@ function ww1_planes_lib.register_bomb(radius, ent_name, inv_image, bomb_texture,
             local obj = self.object
             obj:set_acceleration({x=0,y=-9.8,z=0})
             if moveresult.collides and moveresult.collisions then
+                if moveresult.collisions.object then
+                    --prevents from auto hit
+                    local target_ent = moveresult.collisions.object:get_luaentity()
+                    if target_ent then
+                        if target_ent.driver_name then
+                            if target_ent.driver_name == self.shooter_name or target_ent.driver == self.shooter_name then
+                                return
+                            end
+                        end
+                    end
+                end
                 ww1_planes_lib.explode(obj, self.bomb_radius)
             end
         end
