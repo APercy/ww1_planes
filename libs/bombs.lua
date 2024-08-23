@@ -105,6 +105,7 @@ end
 function ww1_planes_lib.spawn_bomb(self, player_name, ent_name, strength)
 	local pos = self.object:get_pos()
     if not pos then return end
+    pos.y = pos.y - 2
     local rotation = airutils.normalize_rotations(self.object:get_rotation())
     local dir = airutils.rot_to_dir(rotation)
     local yaw = rotation.y
