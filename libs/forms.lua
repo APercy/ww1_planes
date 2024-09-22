@@ -72,7 +72,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                         ent._instruction_mode = true
                     end
                 end
-                airutils.dettachPlayer(ent, player)
+                airutils.dettach_pax(ent, player)
 		    end
             if fields.guns then
                 if ent._vehicle_custom_data then
