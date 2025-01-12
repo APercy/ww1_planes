@@ -5,6 +5,7 @@ function ww1_planes_lib.register_bomb(radius, ent_name, inv_image, bomb_texture,
     minetest.register_entity(ent_name, {   
         initial_properties = {
             physical = true,
+            collide_with_objects = false,
             visual = "sprite",
             backface_culling = false,
             visual_size = {x = 1, y = 1, z = 1},
@@ -21,8 +22,10 @@ function ww1_planes_lib.register_bomb(radius, ent_name, inv_image, bomb_texture,
                 if moveresult.collisions.object then
                     --prevents from auto hit
                     local target_ent = moveresult.collisions.object:get_luaentity()
+                    --core.chat_send_all(dump(target_ent))
                     if target_ent then
                         if target_ent.driver_name then
+                            --core.chat_send_all(dump(self.shooter_name).." ? "..target_ent.driver_name)
                             if target_ent.driver_name == self.shooter_name or target_ent.driver == self.shooter_name then
                                 return
                             end
